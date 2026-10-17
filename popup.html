@@ -1,69 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <style>
-    body {
-      width: 320px;
-      padding: 15px;
-      font-family: Arial, sans-serif;
-    }
-    input[type="text"] {
-      width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
-      margin-bottom: 10px;
-    }
-    button {
-      width: 100%;
-      padding: 8px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    #result {
-      margin-top: 15px;
-      padding: 10px;
-      background-color: #f8f9fa;
-      border: 1px solid #ddd;
-    }
-    .history-section {
-      margin-top: 20px;
-      border-top: 2px solid #ccc;
-      padding-top: 10px;
-    }
-    .history-list {
-      padding-left: 15px;
-      font-size: 12px;
-    }
-    .clear-btn {
-      background-color: #7f8c8d;
-      margin-top: 8px;
-    }
-    .clear-btn:hover {
-      background-color: #6c7a89;
-    }
-  </style>
+  <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <h3>LinkShield</h3>
-  <input type="text" id="urlInput" placeholder="Saisir une URL (ex: https://example.com)">
-  <button id="scanBtn">Scan URL</button>
+  <div class="header">
+    <div class="brand">
+      <span class="brand-icon">🛡️</span>
+      <span>LinkShield</span>
+    </div>
+    <span class="version-tag">MV3</span>
+  </div>
+
+  <div class="input-section">
+    <input type="text" id="urlInput" placeholder="Paste URL (e.g., https://example.com)">
+    <button id="scanBtn" class="btn-primary">Analyze URL</button>
+  </div>
 
   <div id="result">
-    <strong>Statut :</strong> Prêt pour l'analyse.
+    <div class="result-idle">Ready to analyze URL structure.</div>
   </div>
 
   <div class="history-section">
-    <strong>Historique récent :</strong>
+    <div class="history-header">
+      <span class="history-title">Recent Scans</span>
+      <button id="clearHistoryBtn" class="btn-clear">Clear</button>
+    </div>
     <ul id="historyList" class="history-list">
-      <li>Aucun scan enregistré.</li>
+      <li class="history-card" style="justify-content: center; color: var(--text-muted);">No recent scans.</li>
     </ul>
-    <button id="clearHistoryBtn" class="clear-btn">Effacer l'historique</button>
   </div>
 
   <script src="analyzer.js"></script>
