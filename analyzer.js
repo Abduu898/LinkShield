@@ -1,5 +1,7 @@
 /**
- * Valide et décompose une chaîne d'URL.
+ * Validates and parses an input URL string.
+ * @param {string} urlString 
+ * @returns {object} Parsed URL properties or validation error message
  */
 function parseUrl(urlString) {
   try {
@@ -8,7 +10,7 @@ function parseUrl(urlString) {
     if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
       return {
         valid: false,
-        error: `Protocole non supporté ("${parsed.protocol}"). Seuls http: et https: sont autorisés.`
+        error: `Unsupported protocol ("${parsed.protocol}"). Only http: and https: are supported.`
       };
     }
 
@@ -21,48 +23,48 @@ function parseUrl(urlString) {
   } catch (err) {
     return {
       valid: false,
-      error: 'Format d\'URL invalide. N\'oubliez pas d\'inclure "http://" ou "https://".'
+      error: 'Invalid URL format. Make sure to include "http://" or "https://".'
     };
   }
 }
 
 /**
- * Moteur de détection heuristique.
- * @param {object} parsedUrl 
- * @param {string} rawUrl
- * @returns {object} Analyse complète avec findings et niveau de risque
+ * Core heuristic analysis engine.
+ * @param {object} parsedUrl - Output object from parseUrl
+ * @param {string} rawUrl - Full unparsed input URL string
+ * @returns {object} Complete analysis including findings, risk level, and total weight score
  */
 function analyzeUrl(parsedUrl, rawUrl) {
   const findings = [];
   const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
   const isIpAddress = ipv4Regex.test(parsedUrl.hostname);
 
-  // Règle 1 : Utilisation directe d'une adresse IP
+  // Rule 1: Direct IPv4 Address
   if (isIpAddress) {
     findings.push({
       severity: 'SUSPECT',
       weight: 3,
-      message: 'L\'URL utilise une adresse IP directe au lieu d\'un nom de domaine.'
+      message: 'The URL uses a direct IP address instead of a domain name.'
     });
   }
 
-  // Règle 2 : Présence du symbole '@'
+  // Rule 2: '@' Masking Symbol
   if (rawUrl.includes('@')) {
     findings.push({
       severity: 'ÉLEVÉ',
       weight: 4,
-      message: 'L\'URL contient le symbole "@", souvent utilisé pour masquer la destination réelle.'
+      message: 'The URL contains an "@" symbol, often used to obscure the true destination host.'
     });
   }
 
-  // Règle 3 : Nombre excessif de sous-domaines (ignoré si c'est une adresse IP)
+  // Rule 3: Complex Subdomain Structure (Skipped for IP addresses)
   if (!isIpAddress) {
     const lowerHost = parsedUrl.hostname.toLowerCase();
     const commonTwoLevelTlds = ['.co.uk', '.com.fr', '.gouv.fr', '.org.uk', '.co.jp', '.com.au'];
     
     let dotCount = (lowerHost.match(/\./g) || []).length;
     
-    // Ajustement pour les TLDs composés courants
+    // Adjust dot count for multi-part TLD suffixes
     if (commonTwoLevelTlds.some(tld => lowerHost.endsWith(tld))) {
       dotCount -= 1;
     }
@@ -71,21 +73,21 @@ function analyzeUrl(parsedUrl, rawUrl) {
       findings.push({
         severity: 'SUSPECT',
         weight: 2,
-        message: `Nom d'hôte avec une structure complexe de sous-domaines (${dotCount} points détectés).`
+        message: `Complex subdomain structure detected (${dotCount} dots in hostname).`
       });
     }
   }
 
-  // Règle 4 : Utilisation du protocole HTTP non chiffré
+  // Rule 4: Unencrypted Protocol (HTTP)
   if (parsedUrl.protocol === 'http:') {
     findings.push({
       severity: 'FAIBLE',
       weight: 1,
-      message: 'L\'URL utilise le protocole HTTP non chiffré (absence de HTTPS).'
+      message: 'The URL uses unencrypted HTTP protocol (absence of HTTPS).'
     });
   }
 
-  // Règle 5 : Présence de mots-clés sensibles dans le nom d'hôte
+  // Rule 5: Target Keywords in Hostname
   const sensitiveKeywords = ['login', 'verify', 'update', 'account', 'banking', 'secure', 'signin'];
   const lowerHostname = parsedUrl.hostname.toLowerCase();
   const foundKeywords = sensitiveKeywords.filter(keyword => lowerHostname.includes(keyword));
@@ -94,11 +96,11 @@ function analyzeUrl(parsedUrl, rawUrl) {
     findings.push({
       severity: 'INFORMACIONAL',
       weight: 1,
-      message: `Le nom d'hôte contient des mots-clés sensibles : ${foundKeywords.join(', ')}.`
+      message: `The hostname contains sensitive keywords: ${foundKeywords.join(', ')}.`
     });
   }
 
-  // Calcul du score global de risque
+  // Calculate cumulative risk score
   const totalWeight = findings.reduce((sum, item) => sum + item.weight, 0);
   let riskLevel = 'FAIBLE';
   

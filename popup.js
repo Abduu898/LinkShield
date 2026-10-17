@@ -1,5 +1,13 @@
 document.addEventListener('DOMContentLoaded', loadHistory);
 
+document.addEventListener('DOMContentLoaded', function () {
+  document.getElementById('urlInput').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+      document.getElementById('scanBtn').click();
+    }
+  });
+});
+
 document.getElementById('scanBtn').addEventListener('click', function () {
   const inputUrl = document.getElementById('urlInput').value.trim();
   const resultDiv = document.getElementById('result');
