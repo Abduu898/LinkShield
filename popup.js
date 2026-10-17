@@ -98,5 +98,13 @@ function analyzeUrl(parsedUrl, rawUrl) {
     });
   }
 
+  // Règle 4 : Utilisation du protocole HTTP non chiffré
+  if (parsedUrl.protocol === 'http:') {
+    findings.push({
+      severity: 'FAIBLE',
+      message: 'L\'URL utilise le protocole HTTP non chiffré (absence de HTTPS).'
+    });
+  }
+
   return findings;
 }
