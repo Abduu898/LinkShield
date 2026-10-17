@@ -62,7 +62,7 @@ function analyzeUrl(parsedUrl, rawUrl) {
     
     let dotCount = (lowerHost.match(/\./g) || []).length;
     
-    // Si le domaine se termine par un TLD composé connu, on ajuste le décompte
+    // Ajustement pour les TLDs composés courants
     if (commonTwoLevelTlds.some(tld => lowerHost.endsWith(tld))) {
       dotCount -= 1;
     }
