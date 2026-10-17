@@ -4,14 +4,44 @@
   <meta charset="UTF-8">
   <style>
     body {
-      width: 300px;
+      width: 320px;
       padding: 15px;
-      font-family: sans-serif;
+      font-family: Arial, sans-serif;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+    button {
+      width: 100%;
+      padding: 8px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #result {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #f8f9fa;
+      border: 1px solid #ddd;
     }
   </style>
 </head>
 <body>
-  <h2>LinkShield</h2>
-  <p>URL analysis will appear here.</p>
+  <h3>LinkShield</h3>
+  <input type="text" id="urlInput" placeholder="Paste URL here (e.g. https://example.com)">
+  <button id="scanBtn">Scan URL</button>
+
+  <div id="result">
+    <strong>Status:</strong> Ready to scan.
+  </div>
+
+  <script src="popup.js"></script>
 </body>
 </html>
