@@ -57,7 +57,16 @@ function analyzeUrl(parsedUrl, rawUrl) {
 
   // Règle 3 : Nombre excessif de sous-domaines (ignoré si c'est une adresse IP)
   if (!isIpAddress) {
-    const dotCount = (parsedUrl.hostname.match(/\./g) || []).length;
+    const lowerHost = parsedUrl.hostname.toLowerCase();
+    const commonTwoLevelTlds = ['.co.uk', '.com.fr', '.gouv.fr', '.org.uk', '.co.jp', '.com.au'];
+    
+    let dotCount = (lowerHost.match(/\./g) || []).length;
+    
+    // Si le domaine se termine par un TLD composé connu, on ajuste le décompte
+    if (commonTwoLevelTlds.some(tld => lowerHost.endsWith(tld))) {
+      dotCount -= 1;
+    }
+
     if (dotCount >= 3) {
       findings.push({
         severity: 'SUSPECT',
@@ -76,16 +85,16 @@ function analyzeUrl(parsedUrl, rawUrl) {
     });
   }
 
-  // Règle 5 : Présence de mots-clés sensibles dans l'URL
+  // Règle 5 : Présence de mots-clés sensibles dans le nom d'hôte
   const sensitiveKeywords = ['login', 'verify', 'update', 'account', 'banking', 'secure', 'signin'];
-  const lowerUrl = rawUrl.toLowerCase();
-  const foundKeywords = sensitiveKeywords.filter(keyword => lowerUrl.includes(keyword));
+  const lowerHostname = parsedUrl.hostname.toLowerCase();
+  const foundKeywords = sensitiveKeywords.filter(keyword => lowerHostname.includes(keyword));
   
   if (foundKeywords.length > 0) {
     findings.push({
       severity: 'INFORMACIONAL',
       weight: 1,
-      message: `Contient des mots-clés sensibles récurrents dans les cibles de phishing : ${foundKeywords.join(', ')}.`
+      message: `Le nom d'hôte contient des mots-clés sensibles : ${foundKeywords.join(', ')}.`
     });
   }
 

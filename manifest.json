@@ -3,6 +3,9 @@
   "name": "LinkShield",
   "version": "1.0",
   "description": "A local URL analysis tool.",
+  "permissions": [
+    "storage"
+  ],
   "action": {
     "default_popup": "popup.html"
   }

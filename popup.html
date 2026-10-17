@@ -31,15 +31,39 @@
       background-color: #f8f9fa;
       border: 1px solid #ddd;
     }
+    .history-section {
+      margin-top: 20px;
+      border-top: 2px solid #ccc;
+      padding-top: 10px;
+    }
+    .history-list {
+      padding-left: 15px;
+      font-size: 12px;
+    }
+    .clear-btn {
+      background-color: #7f8c8d;
+      margin-top: 8px;
+    }
+    .clear-btn:hover {
+      background-color: #6c7a89;
+    }
   </style>
 </head>
 <body>
   <h3>LinkShield</h3>
-  <input type="text" id="urlInput" placeholder="Paste URL here (e.g. https://example.com)">
+  <input type="text" id="urlInput" placeholder="Saisir une URL (ex: https://example.com)">
   <button id="scanBtn">Scan URL</button>
 
   <div id="result">
-    <strong>Status:</strong> Ready to scan.
+    <strong>Statut :</strong> Prêt pour l'analyse.
+  </div>
+
+  <div class="history-section">
+    <strong>Historique récent :</strong>
+    <ul id="historyList" class="history-list">
+      <li>Aucun scan enregistré.</li>
+    </ul>
+    <button id="clearHistoryBtn" class="clear-btn">Effacer l'historique</button>
   </div>
 
   <script src="analyzer.js"></script>
