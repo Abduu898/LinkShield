@@ -89,5 +89,14 @@ function analyzeUrl(parsedUrl, rawUrl) {
     });
   }
 
+  // Règle 3 : Nombre excessif de sous-domaines
+  const dotCount = (parsedUrl.hostname.match(/\./g) || []).length;
+  if (dotCount >= 3) {
+    findings.push({
+      severity: 'SUSPECT',
+      message: `Nom d'hôte avec une structure complexe de sous-domaines (${dotCount} points détectés).`
+    });
+  }
+
   return findings;
 }
